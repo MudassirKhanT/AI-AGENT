@@ -9,4 +9,6 @@ router.post("/register", body("email").isEmail().withMessage("Email must be a va
 router.post("/login", body("email").isEmail().withMessage("Email must be a valid email addresss"), body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"), userController.loginController);
 //profile
 router.get("/profile", authMiddleware.authUser, userController.profileController);
+//Logout
+router.get("/logout", authMiddleware.authUser, userController.logoutController);
 export default router;
