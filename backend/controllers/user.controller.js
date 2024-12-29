@@ -37,6 +37,7 @@ export const loginController = async (req, res) => {
       return res.status(401).json({ errors: "Invalid Credentials" });
     }
     const token = await user.generateJWT();
+    delete user._doc.password;
     return res.status(201).json({ user, token });
   } catch (error) {
     return res.send(400).send(error.message);
