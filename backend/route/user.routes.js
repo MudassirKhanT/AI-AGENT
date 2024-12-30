@@ -11,4 +11,6 @@ router.post("/login", body("email").isEmail().withMessage("Email must be a valid
 router.get("/profile", authMiddleware.authUser, userController.profileController);
 //Logout
 router.get("/logout", authMiddleware.authUser, userController.logoutController);
+//Get all users
+router.get("/all", authMiddleware.authUser, userController.getAllUsersController);
 export default router;
