@@ -1,18 +1,20 @@
 import { useState, useContext, useEffect } from "react";
 import React from "react";
 import { useLocation } from "react-router-dom";
-//import { UserContext } from "../context/user.context";
+import { UserContext } from "../context/user.context";
 import axios from "../config/axios";
 import { initializeSocket, receiveMessagae, sendMessage } from "../config/socket";
 const Project = () => {
   const location = useLocation();
-  console.log(location.state);
+  //console.log(location.state);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(new Set());
-  //const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [project, setProject] = useState(location.state.project);
+  //const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
 
   const handleUserClick = (id) => {
     setSelectedUserId((prevSelectedUserId) => {
@@ -41,8 +43,20 @@ const Project = () => {
         console.log(err);
       });
   }
+  function send() {
+    sendMessage("project-message", {
+      message,
+      sender: user._id,
+    });
+    console.log("Message:", message, user._id);
+
+    setMessage("");
+  }
   useEffect(() => {
-    initializeSocket();
+    initializeSocket(project._id);
+    receiveMessagae("project-message", (data) => {
+      console.log("data:", data);
+    });
     axios
       .get(`/projects/get-project/${location.state.project._id}`)
       .then((res) => {
@@ -87,9 +101,9 @@ const Project = () => {
               <p className="text-sm">Lorem ipsum dolor sit amet.</p>
             </div>
           </div>
-          <div className="input-field w-full flex">
-            <input className="p-2 px-4 border-none outline-none flex-grow" type="text" placeholder="Enter message" />
-            <button className=" px-5 bg-slate-950 text-white ">
+          <div className="inputField w-full flex">
+            <input value={message} onChange={(e) => setMessage(e.target.value)} className="p-2 px-4 border-none outline-none flex-grow" type="text" placeholder="Enter your message" />
+            <button onClick={send} className=" px-5 bg-slate-950 text-white ">
               <i className="ri-send-plane-fill"></i>
             </button>
           </div>
