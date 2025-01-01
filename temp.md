@@ -117,6 +117,71 @@ prime) or its prime factorization.
 
 ````
 
+````
+```javascript
+// Function to check if a number is prime
+function isPrime(num) {
+// Prime numbers are whole numbers greater than 1
+if (num <= 1) return false;
+// 2 is the only even prime number
+if (num <= 3) return true;
+// Divisibility by 2 or 3
+if (num % 2 === 0 || num % 3 === 0) return false;
+
+// Optimized primality test. We only need to check divisibility up to the square
+root of the number.
+for (let i = 5; i * i <= num; i += 6) {
+if (num % i === 0 || num % (i + 2) === 0) return false;
+}
+return true;
+}
+
+// Function to find prime or factors
+function primeOrFactors(num) {
+//Error Handling for non-integer input
+if (!Number.isInteger(num)) {
+throw new Error("Input must be an integer.");
+}
+
+if (isPrime(num)) {
+return num; //Return the number if it's prime
+
+} else {
+const factors = [];
+//Efficiently find factors. Start from 2 and go up to the square root of num.
+for (let i = 2; i * i <= num; i++) {
+while (num % i === 0) {
+factors.push(i);
+num /= i;
+}
+}
+//If num is still greater than 1 after the loop, it's a prime factor.
+if (num > 1) {
+factors.push(num);
+}
+return factors; //Return the factors if not prime
+
+}
+}
+
+// Example Usage
+console.log(primeOrFactors(7)); // Output: 7 (prime)
+console.log(primeOrFactors(12)); // Output: [2, 2, 3] (factors)
+console.log(primeOrFactors(35)); // Output: [5, 7] (factors)
+console.log(primeOrFactors(97)); // Output: 97 (prime)
+console.log(primeOrFactors(1)); // Output: false (not prime)
+console.log(primeOrFactors(0)); // Output: false (not prime)
+console.log(primeOrFactors(-5)); // Output: false (not prime)
+
+//Error Handling example
+try{
+console.log(primeOrFactors(3.14)); // Throws an error
+} catch (error){
+console.error("Error:", error.message);
+}
+
+````
+
 ```
 
 ```
