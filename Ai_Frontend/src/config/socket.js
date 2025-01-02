@@ -11,12 +11,14 @@ export const initializeSocket = (projectId) => {
       projectId,
     },
   });
+
   return socketInstance;
 };
 
-export const receiveMessagae = (eventName, cb) => {
+export const receiveMessage = (eventName, cb) => {
   socketInstance.on(eventName, cb);
 };
+
 export const sendMessage = (eventName, data) => {
   socketInstance.emit(eventName, data);
 };
