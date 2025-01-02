@@ -2,11 +2,10 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "../context/user.context";
 import { useLocation } from "react-router-dom";
 import axios from "../config/axios";
-//import { initializeSocket, , sendMessage } from "../config/socket.js";
 import { initializeSocket, receiveMessage, sendMessage } from "../config/socket";
 import Markdown from "markdown-to-jsx";
 import hljs from "highlight.js";
-//import { getWebContainer } from "../config/webcontainer";
+import { getWebContainer } from "../config/WebContainer";
 
 function SyntaxHighlightedCode(props) {
   const ref = useRef(null);
@@ -41,7 +40,7 @@ const Project = () => {
   const [currentFile, setCurrentFile] = useState(null);
   const [openFiles, setOpenFiles] = useState([]);
 
-  // const [webContainer, setWebContainer] = useState(null);
+  const [webContainer, setWebContainer] = useState(null);
   // const [iframeUrl, setIframeUrl] = useState(null);
 
   // const [runProcess, setRunProcess] = useState(null);
@@ -103,12 +102,12 @@ const Project = () => {
   useEffect(() => {
     initializeSocket(project._id);
 
-    // if (!webContainer) {
-    //   getWebContainer().then((container) => {
-    //     setWebContainer(container);
-    //     console.log("container started");
-    //   });
-    // }
+    if (!webContainer) {
+      getWebContainer().then((container) => {
+        setWebContainer(container);
+        console.log("container started");
+      });
+    }
 
     receiveMessage("project-message", (data) => {
       console.log(data);
@@ -118,7 +117,7 @@ const Project = () => {
 
         console.log(message);
 
-        //webContainer?.mount(message.fileTree);
+        webContainer?.mount(message.fileTree);
 
         if (message.fileTree) {
           setFileTree(message.fileTree || {});
